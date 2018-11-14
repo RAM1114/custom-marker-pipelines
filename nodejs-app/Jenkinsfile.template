@@ -3,45 +3,50 @@ pipeline {
   options { 
     buildDiscarder(logRotator(numToKeepStr: '2'))
   }
-      stages{
-       
-            stage('Test') {
-               agent { label 'nodejs-app' }
-              steps {
-                container('nodejs') {
-                  echo 'Hello World!'   
-                  sh 'node --version'
-                }
-              }
-            }
-             stage('Build and Push Image') {
-            when {
-               beforeAgent true
-               branch 'master'
-            }
+   post {
+    aborted {
+      echo "Why didn't you push my button?"
+    }
+  }
+    stages{
+
+          stage('Test') {
+             agent { label 'nodejs-app' }
             steps {
-               echo "TODO - build and push image"
-              //  sh 'java -version'
+              container('nodejs') {
+                echo 'Hello World!'   
+                sh 'node --version'
+              }
             }
           }
-          
-              stage('Deploy') {
-                  when {
-                    beforeAgent true
-                    branch 'master'
-                  }
-                 options {
-                  timeout(time: 60, unit: 'SECONDS') 
-                }
-                input {
-                  message "Should we deploy?"
-                  submitter "cs386046"
-                  submitterParameter "APPROVER"
-                }
-                 steps {
-                echo "Continuing with deployment - approved by ${APPROVER}"
-              }
+           stage('Build and Push Image') {
+          when {
+             beforeAgent true
+             branch 'master'
+          }
+          steps {
+             echo "TODO - build and push image"
+            //  sh 'java -version'
+          }
         }
-     }
-  
+
+            stage('Deploy') {
+                when {
+                  beforeAgent true
+                  branch 'master'
+                }
+               options {
+                timeout(time: 60, unit: 'SECONDS') 
+              }
+              input {
+                message "Should we deploy?"
+               // submitter "cs386046"
+                submitterParameter "APPROVER"
+              }
+               steps {
+              echo "Continuing with deployment - approved by ${APPROVER}"
+            }
+      }
+   }
+
 }
