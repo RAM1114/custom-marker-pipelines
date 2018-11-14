@@ -40,10 +40,11 @@ pipeline {
               success {
                 stash name: 'app', includes: '*.js, public/**, views/*, Dockerfile'
               }
-            }
-             always {
+               always {
               junit 'res.xml'
             }
+            }
+            
           }
           stage('Load Test') {  
       agent {
