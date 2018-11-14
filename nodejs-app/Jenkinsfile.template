@@ -13,7 +13,8 @@ pipeline {
     stages{
 
           stage('Test') {
-                agent {
+          agent { label 'nodejs-app' }
+              /*  agent {
                       kubernetes {
                         label 'nodejs-app-inline'
                         yaml """
@@ -34,7 +35,7 @@ pipeline {
                   tty: true
                         """
                       }
-                    }
+                    }*/
             steps {
              checkout scm
               container('nodejs') {
